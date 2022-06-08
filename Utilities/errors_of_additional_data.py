@@ -1,3 +1,5 @@
+import torch
+
 from CGAT.lightning_module import LightningModel, collate_fn
 from CGAT.data import CompositionData
 from torch.utils.data import DataLoader
@@ -41,11 +43,12 @@ def main():
                 max_neighbor_number=model.hparams.max_nbr,
                 target=model.hparams.target
             )
-            loader = DataLoader(dataset, batch_size=500, shuffle=False, collate_fn=collate_fn)
+            loader = DataLoader(dataset, batch_size=1000, shuffle=False, collate_fn=collate_fn)
             comp = get_composition(path)
             errors = []
             for batch in loader:
-                _, _, pred, target, _ = model.evaluate(batch)
+                with torch.no_grad():
+                    _, _, pred, target, _ = model.evaluate(batch)
                 errors.append(np.reshape(np.abs(pred - target), (-1,)))
             df.loc[len(df)] = [comp, i, np.mean(np.concatenate(errors))]
         savepath = 'additional_data/random.csv'
