@@ -49,7 +49,7 @@ def main():
             for batch in loader:
                 with torch.no_grad():
                     _, _, pred, target, _ = model.evaluate(batch)
-                errors.append(np.reshape(np.abs(pred - target), (-1,)))
+                errors.append(np.reshape(np.abs(pred.cpu().numpy() - target.cpu().numpy()), (-1,)))
             df.loc[len(df)] = [comp, i, np.mean(np.concatenate(errors))]
         savepath = 'additional_data/random.csv'
         if not os.path.isfile(savepath):
