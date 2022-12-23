@@ -136,9 +136,6 @@ class CompositionData(Dataset):
             self_fea_idx = torch.LongTensor(
                 self.data['input'][idx][1][:, 0:self.max_num_nbr].flatten())
             target = torch.Tensor([target])
-        # if self.target != 'volume':
+
         return Data(x=atom_fea, edge_index=torch.stack((self_fea_idx, nbr_fea_idx)), edge_attr=nbr_fea,
                     y=target * N), (atom_weights_c, atom_fea_c, self_fea_idx_c, nbr_fea_idx_c)
-        # else:
-        #     return Data(x=atom_fea, edge_index=torch.stack((self_fea_idx, nbr_fea_idx)), edge_attr=nbr_fea,
-        #                 y=target), (atom_weights_c, atom_fea_c, self_fea_idx_c, nbr_fea_idx_c)
